@@ -78,4 +78,40 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 
+## Bloque 6: Agrupar por tarea y graficar. 
+promedios_tarea = df.groupby('Tarea')[['Energia', 'Estado_Animo', 'Resultado']].mean()
 
+# Reinicio de índices para graficar con seaborn
+promedios_tarea_reset = promedios_tarea.reset_index().melt(id_vars='Tarea', var_name='Variable', value_name='Promedio')
+
+plt.figure(figsize=(12, 6))
+sns.barplot(data=promedios_tarea_reset, x='Tarea', y='Promedio', hue='Variable')
+plt.title("Promedio de Energía, Estado de Ánimo y Resultado por Tarea")
+plt.ylabel("Promedio (escala 1-10)")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+# Mostrar puntos clave agrupados por Tarea
+agrupados = df.groupby('Tarea')['Punto clave'].unique()
+
+print("\n🧠 Puntos clave por Tarea:\n")
+for tarea, puntos in agrupados.items():
+    print(f"🏷️ {tarea}:")
+    for punto in puntos:
+        if pd.notna(punto) and punto.strip():  # Evita vacíos
+            print(f"   - {punto}")
+    print("-" * 40)
+
+# Bloque 7: Promedios por Tipo de Tarea
+promedios_tipo = df.groupby('Tipo_tarea')[['Energia', 'Estado_Animo', 'Resultado']].mean()
+
+promedios_tipo_reset = promedios_tipo.reset_index().melt(id_vars='Tipo_tarea', var_name='Variable', value_name='Promedio')
+
+plt.figure(figsize=(10, 6))
+sns.barplot(data=promedios_tipo_reset, x='Tipo_tarea', y='Promedio', hue='Variable')
+plt.title("Promedio por Tipo de Tarea")
+plt.ylabel("Promedio (escala 1-10)")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
