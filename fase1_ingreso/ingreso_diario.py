@@ -4,7 +4,7 @@ import subprocess
 from datetime import datetime
 
 # --- CONFIGURACIÓN ---
-RUTA_CSV = os.path.abspath('../neurocoach-ia/registro_cognitivo.csv')
+RUTA_CSV = os.path.abspath('../neurocoach-ia/data/registro_cognitivo.csv')
 RUTA_ANALISIS = os.path.abspath('../neurocoach-ia/fase2_analisis/analisis_datos.py')
 
 # --- FUNCIONES DE ENTRADA ---

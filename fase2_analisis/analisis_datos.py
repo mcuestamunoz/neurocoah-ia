@@ -5,7 +5,7 @@ import seaborn as sns
 
 # === Configuración de rutas ===
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CSV_PATH = os.path.join(BASE_DIR, '..', 'registro_cognitivo.csv')
+CSV_PATH = os.path.abspath('../neurocoach-ia/data/registro_cognitivo.csv')
 GRAFICOS_DIR = os.path.join(BASE_DIR, 'graficos')
 INSIGHTS_DIR = os.path.join(BASE_DIR, 'insights')
 
