@@ -1,6 +1,9 @@
 
 🧠 Puntos clave por Tarea:
 
+🏷️ Bicicleta:
+   - Piernas vacias por no comer bien dia anterior
+----------------------------------------
 🏷️ Correr:
    - Calentamiento muy suave y progressivo
    - Ambiente y confianza del entorno
@@ -15,6 +18,8 @@
 ----------------------------------------
 🏷️ Plan estudios IA:
    - Motivación proyecto IA
+----------------------------------------
+🏷️ Proyecto IA:
 ----------------------------------------
 🏷️ Trabajo:
    - Buen ambiente
