@@ -1,34 +1,81 @@
 import os
 import csv
+import subprocess
 from datetime import datetime
 
-ruta_csv = os.path.abspath('../registro_cognitivo.csv')
+# --- CONFIGURACIÓN ---
+RUTA_CSV = os.path.abspath('../neurocoach-ia/registro_cognitivo.csv')
+RUTA_ANALISIS = os.path.abspath('../neurocoach-ia/fase2_analisis/analisis_datos.py')
 
-# 1. Entrada del usuario
-fecha = datetime.now().strftime("%Y-%m-%d")
-hora = datetime.now().strftime("%H:%M")
-energia = input("Nivel de energía (1-10): ")
-estado_animo = input("Estado de ánimo (1-10): ")
-tarea = input("¿Qué tarea realizaste?: ")
-tipo_tarea = input("Tipo de tarea (Ejercicio, Rutina, Trabajo...): ")
-resultado = input("Resultado percibido (1-10): ")
-comentarios = input("Comentarios del día: ")
-punto_clave = input("Punto clave (si hubo alguno): ")
+# --- FUNCIONES DE ENTRADA ---
+def input_numerico(mensaje, minimo=1, maximo=10):
+    while True:
+        valor = input(f"{mensaje} ({minimo}-{maximo}): ").strip()
+        if valor.isdigit() and minimo <= int(valor) <= maximo:
+            return valor
+        else:
+            print("❌ Valor no válido. Intenta de nuevo.")
 
-# 2. Guardar en CSV
-existe_archivo = os.path.isfile(ruta_csv)
-with open(ruta_csv, 'a', newline='') as archivo:
-    escritor = csv.writer(archivo)
-    if not existe_archivo:
-        escritor.writerow(['Fecha', 'Hora', 'Energia', 'Estado_Animo', 'Tarea', 'Tipo_tarea', 'Resultado', 'Comentarios', 'Punto clave'])
-    escritor.writerow([fecha, hora, energia, estado_animo, tarea, tipo_tarea, resultado, comentarios, punto_clave])
+def capturar_datos():
+    print("\n🧠 Ingreso de datos para el Neurocoach:")
+    def input_fecha():
+        hoy = datetime.now().strftime("%Y-%m-%d")
+        entrada = input(f"Fecha del registro [Enter para usar {hoy}]: ").strip()
+        if entrada == "":
+            return hoy
+        try:
+            datetime.strptime(entrada, "%Y-%m-%d")
+            return entrada
+        except ValueError:
+            print("❌ Formato inválido. Usa AAAA-MM-DD.")
+            return input_fecha()
+    def input_hora():
+        ahora = datetime.now().strftime("%H:%M")
+        entrada = input(f"Hora del registro [Enter para usar {ahora}]: ").strip()
+        if entrada == "":
+            return ahora
+        try:
+            datetime.strptime(entrada, "%H:%M")
+            return entrada
+        except ValueError:
+            print("❌ Formato inválido. Usa HH:MM en 24h.")
+            return input_hora()
+        
+    fecha = input_fecha()
+    hora = input_hora()
+    energia = input_numerico("Nivel de energía")
+    estado_animo = input_numerico("Estado de ánimo")
+    tarea = input("¿Qué tarea realizaste?: ").strip()
+    tipo_tarea = input("Tipo de tarea (Ejercicio, Rutina, Trabajo...): ").strip()
+    resultado = input_numerico("Resultado percibido")
+    comentarios = input("Comentarios del día: ").strip()
+    punto_clave = input("Punto clave (si hubo alguno): ").strip()
 
-print("\n✅ Registro guardado correctamente.")
+    return [fecha, hora, energia, estado_animo, tarea, tipo_tarea, resultado, comentarios, punto_clave]
 
-# 3. Preguntar si ejecutar análisis
-respuesta = input("\n¿Deseas ejecutar el análisis de datos ahora? (s/n): ").strip().lower()
-if respuesta == 's':
-    import subprocess
-    ruta_analisis = '/Users/marccuestamunoz/repos/neurocoach-ia/fase2_analisis/analisis_datos.py'
-    subprocess.run(['python3', ruta_analisis])
+# --- GUARDAR EN CSV ---
+def guardar_registro(datos):
+    existe = os.path.isfile(RUTA_CSV)
+    with open(RUTA_CSV, 'a', newline='') as archivo:
+        escritor = csv.writer(archivo)
+        if not existe:
+            escritor.writerow(['Fecha', 'Hora', 'Energia', 'Estado_Animo', 'Tarea', 'Tipo_tarea', 'Resultado', 'Comentarios', 'Punto clave'])
+        escritor.writerow(datos)
+    print("✅ Registro guardado correctamente.")
 
+# --- LANZAR ANÁLISIS ---
+def ejecutar_analisis():
+    if not os.path.exists(RUTA_ANALISIS):
+        print(f"⚠️ Script de análisis no encontrado en: {RUTA_ANALISIS}")
+        return
+    print("📈 Ejecutando análisis de datos...\n")
+    subprocess.run(['python3', RUTA_ANALISIS])
+
+# --- MAIN FLOW ---
+if __name__ == "__main__":
+    datos = capturar_datos()
+    guardar_registro(datos)
+
+    respuesta = input("\n¿Deseas ejecutar el análisis de datos ahora? (s/n): ").strip().lower()
+    if respuesta == 's':
+        ejecutar_analisis()
