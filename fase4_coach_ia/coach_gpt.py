@@ -3,6 +3,7 @@
 import pandas as pd
 from openai import OpenAI
 import os
+import joblib
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
@@ -28,6 +29,26 @@ resultado_prom = df_semana['Resultado'].mean()
 tarea_mas_frecuente = df_semana['Tipo_tarea'].mode()[0] if not df_semana.empty else "No disponible"
 dia_mas_fuerte = df_semana['Datetime'].dt.day_name().mode()[0] if not df_semana.empty else "No disponible"
 
+# --- PREDICCIÓN AUTOMÁTICA CON MODELO ---
+modelo_path = os.path.abspath(os.path.join('../neurocoach-ia/data/modelo_predictivo.pkl'))
+modelo = joblib.load(modelo_path)
+
+entrada = pd.DataFrame([{
+    "Energia": energia_prom,
+    "Estado_Animo": animo_prom,
+    "Hora_Num": 10,
+    "Punto_clave_bin": 0,
+    "Comentario_longitud": 0,
+    "Tipo_tarea": tarea_mas_frecuente,
+    "Dia_Semana": dia_mas_fuerte
+}])
+
+try:
+    prediccion_resultado = modelo.predict(entrada)[0]
+    prediccion_str = f"Predicción del resultado percibido: {prediccion_resultado:.2f}"
+except Exception as e:
+    prediccion_str = f"No se pudo calcular la predicción: {str(e)}"
+
 resumen_analisis = f"""
 Resumen de los últimos 7 días:
 - Energía media: {energia_prom:.2f}
@@ -35,6 +56,7 @@ Resumen de los últimos 7 días:
 - Resultado percibido medio: {resultado_prom:.2f}
 - Tipo de tarea más frecuente: {tarea_mas_frecuente}
 - Día con mayor actividad: {dia_mas_fuerte}
+- {prediccion_str}
 """
 
 # --- PROMPT PARA GPT ---
@@ -62,3 +84,16 @@ respuesta = response.choices[0].message.content
 
 print("\n🧠 Análisis del Coach IA")
 print(respuesta)
+
+# --- GUARDAR RESPUESTA EN ARCHIVO DE LOG ---
+fecha_hoy = datetime.now().strftime("%Y-%m-%d")
+log_dir = os.path.abspath(os.path.join('..', 'fase4_coach_ia', 'logs'))
+os.makedirs(log_dir, exist_ok=True)
+
+log_path = os.path.join(log_dir, f"log_{fecha_hoy}.txt")
+with open(log_path, "w", encoding="utf-8") as f:
+    f.write("🧠 Análisis del Coach IA\n")
+    f.write(respuesta)
+
+print(f"\n📝 Respuesta guardada en: {log_path}")
+

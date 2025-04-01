@@ -96,3 +96,23 @@ Aprender inteligencia artificial creando una inteligencia personalizada.
 Cada etapa del proyecto es una lección viva.
 Nada de cursos pasivos: aquí se aprende construyendo tu propia mente digital.
 
+
+
+## 🧠 Visión clara: Automatizar desde F1 hasta F4
+Imagina este flujo ideal:
+
+📱 Abres una web app (Streamlit) desde tu móvil
+
+Registras tus datos diarios en segundos
+
+Al enviar:
+
+Se actualiza el CSV
+
+Se ejecuta el modelo predictivo
+
+Se genera el análisis con GPT
+
+Se guarda el resultado en un log con timestamp
+
+Todo sin tocar código, terminal ni notebooks
