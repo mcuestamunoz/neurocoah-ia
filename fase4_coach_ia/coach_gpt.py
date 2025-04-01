@@ -1,18 +1,20 @@
 # 🧠 Coach Cognitivo con GPT – Neurocoach IA
 
 import pandas as pd
-import openai
+from openai import OpenAI
 import os
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 # --- CARGAR CLAVE DESDE .env ---
 load_dotenv()  # 👉 Carga variables del .env
-openai.api_key = os.getenv("OPENAI_API_KEY")
+OpenAI.api_key = os.getenv("OPENAI_API_KEY")
 
 # --- CARGA Y FILTRADO DE DATOS ---
-ruta_csv = os.path.abspath(os.path.join('..', 'data', 'registro_cognitivo.csv'))
-df = pd.read_csv(ruta_csv)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CSV_PATH = os.path.abspath('../neurocoach-ia/data/registro_cognitivo.csv')
+
+df = pd.read_csv(CSV_PATH)
 df['Datetime'] = pd.to_datetime(df['Fecha'] + ' ' + df['Hora'])
 
 # Últimos 7 días
@@ -46,14 +48,17 @@ Eres un coach cognitivo. Basado en el siguiente resumen semanal, ofrece:
 """
 
 # --- LLAMADA A GPT ---
-response = openai.ChatCompletion.create(
+load_dotenv()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+response = client.chat.completions.create(
     model="gpt-3.5-turbo",
     messages=[
         {"role": "system", "content": "Eres un coach cognitivo experto en productividad y bienestar."},
         {"role": "user", "content": prompt}
     ]
 )
-
 respuesta = response.choices[0].message.content
+
 print("\n🧠 Análisis del Coach IA")
 print(respuesta)

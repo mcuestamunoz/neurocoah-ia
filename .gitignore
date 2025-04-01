@@ -1,0 +1,21 @@
+# Ignorar archivo de clave API
+.env
+
+# Archivos temporales de Python
+__pycache__/
+*.py[cod]
+
+# Archivos del sistema
+.DS_Store
+
+# Entornos virtuales
+venv/
+env/
+.entorno-neurocoach/
+
+# Notebooks temporales
+*.ipynb_checkpoints
+
+# Logs
+*.log
+logs/
