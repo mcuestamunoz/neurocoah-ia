@@ -19,6 +19,7 @@
    - No pensar y actuar
    - Necesario descanso
    - Lunes por la mañana
+   - No pensar
 ----------------------------------------
 🏷️ Plan estudios IA:
    - Motivación proyecto IA
