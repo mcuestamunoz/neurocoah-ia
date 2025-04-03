@@ -1,4 +1,4 @@
-Fecha,Hora,Energia,Estado_Animo,Tarea,Tipo_tarea,Resultado,Comentarios,Punto clave
+Fecha,Hora,Energia,Estado_Animo,Resultado,Tipo_tarea,Comentarios,Punto clave,Fase_mental,Tipo_pensamiento,Simbolo_dia
 2025-03-28,09:00,6,6,Levantarme,Rutina,8,Me costó un poco,Nada
 2025-03-28,10:00,8,8,Correr,Ejercicio,10,Sensaciones increíbles,Calentamiento muy suave y progressivo
 2025-03-28,11:45,8,8,Plan estudios IA,Estudio IA,10,Sensaciones increíbles,Motivación proyecto IA
@@ -17,7 +17,7 @@ Fecha,Hora,Energia,Estado_Animo,Tarea,Tipo_tarea,Resultado,Comentarios,Punto cla
 2025-03-31,10:59,7,8,Desayuno,Rutina,5,Dia libre ejercicio,Me cuesta desayunar
 2025-03-31,11:02,7,7,Proyecto IA,Proyecto IA,8,,Motivación
 2025-04-01,08:45,7,7,Levantarme,Rutina,8,,No pensar
-2025-04-01,12:11,9,9,,Proyecto,9,"Hemos avanzado mucho, cada vez mas claro el camino a seguir",Motivación
+2025-04-01,12:11,9,9,,Proyecto,9,Hemos avanzado mucho,cada vez mas claro el camino a seguir,Motivación
 2025-04-01,12:17,8,8,,Creativa,8,Definir ruta proyecto,
 2025-04-01,12:19,8,8,,Creativa,8,Nueva ruta proyecto,
 2025-04-01,12:21,6,6,,Proyecto,6,Probando,
@@ -25,3 +25,5 @@ Fecha,Hora,Energia,Estado_Animo,Tarea,Tipo_tarea,Resultado,Comentarios,Punto cla
 2025-04-02,09:47,9,8,,Rutina,8,Levantar con energia,
 2025-04-02,09:49,9,8,,Rutina,8,Levantar con energia,
 2025-04-02,11:59,6,6,,Física,6,Correr,Mala calidad del sueño y falta de activación
+2025-04-02,12:23,6,6,7,Estudio,Flow,intuitivo,visualización,pensamiento con imagenes,si
+2025-04-02,22:54,5,5,5,Estudio,Fatiga mental,Pensamiento con imágenes,imagen,,

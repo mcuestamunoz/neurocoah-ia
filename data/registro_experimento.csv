@@ -1,0 +1,6 @@
+timestamp,energia_0_10,fatiga_mental_0_10,estado_fisico,estado_mental,fase_mental,control_pensamiento_0_10,conciencia_presente_0_10,tipo_pensamiento,simbolo_o_imagen,palabra_repetitiva,input_tipo,input_intensidad,contenido_estudiado,aprendizaje_espontaneo,resistencia_detectada,nota_libre
+2025-04-03 10:19,4,4,correcto,correcto,Alta concentración,6,6,Caótico organizado,nada,nada,Video,ligero,proyecto,nada,nada,
+2025-04-03 10:20,4,7,cansado,apagado,Mala calidad del sueño,5,6,Imágenes,nada,nada,Audio,ligero,neurociencia,nada,nada,
+2025-04-03 10:21,5,6,correcto,preparado,Alta concentración,6,7,Narrativo,nada,IA,Sin estímulo,moderado,proyecto,nada,mental,
+2025-04-03 10:22,5,6,fuerte,fuerte,Alta concentración,5,6,Analítico,nada,nada,Mixto,intenso,proyecto,nada,nada,
+2025-04-03 10:24,4,7,correcto,correcto,Alta concentración,6,7,Analítico,coche,mejorar,Video,moderado,apple inteligence,nada,nada,

@@ -9,33 +9,44 @@ from sklearn.metrics import mean_absolute_error, r2_score
 import joblib
 
 # --- CARGA DE DATOS ---
-RUTA_CSV = os.path.abspath('../neurocoach-ia/data/registro_cognitivo.csv')
+RUTA_CSV = os.path.abspath('../neurocoach-ia/data/registro_experimento.csv')
 df = pd.read_csv(RUTA_CSV)
-df = df.dropna()
+df = df.dropna(subset=[
+    'energia_0_10', 'fatiga_mental_0_10',
+    'control_pensamiento_0_10', 'conciencia_presente_0_10']) # Solo eliminamos filas donde las columnas numéricas críticas estén vacías
 
 # --- FEATURE ENGINEERING ---
-df['Datetime'] = pd.to_datetime(df['Fecha'] + ' ' + df['Hora'])
+df['Datetime'] = pd.to_datetime(df['timestamp'])
 df['Dia_Semana'] = df['Datetime'].dt.day_name()
 df['Hora_Num'] = df['Datetime'].dt.hour
-df['Punto_clave_bin'] = df['Punto clave'].apply(lambda x: 0 if pd.isna(x) or x.strip() == '' else 1)
-df['Comentario_longitud'] = df['Comentarios'].apply(lambda x: len(str(x)))
+df['Comentario_longitud'] = df['nota_libre'].apply(lambda x: len(str(x)))
 
 # --- VARIABLES DE ENTRADA Y SALIDA ---
-X = df[['Energia', 'Estado_Animo', 'Hora_Num', 'Punto_clave_bin', 'Comentario_longitud', 'Tipo_tarea', 'Dia_Semana']]
-y = df['Resultado'].astype(float)
+# Seleccionamos las variables de entrada (X) y salida (y)
+X = df[['energia_0_10', 'fatiga_mental_0_10', 'control_pensamiento_0_10', 
+        'conciencia_presente_0_10', 'tipo_pensamiento', 'simbolo_o_imagen', 
+        'input_tipo', 'input_intensidad', 'contenido_estudiado', 'Dia_Semana', 
+        'Hora_Num', 'Comentario_longitud']]
+
+# La variable objetivo: aprendizaje espontáneo
+y = df['conciencia_presente_0_10'].astype(float)  # Asegúrate de que esté en formato numérico
 
 # --- PREPROCESAMIENTO ---
-categorical_cols = ['Tipo_tarea', 'Dia_Semana']
-numerical_cols = ['Energia', 'Estado_Animo', 'Hora_Num', 'Punto_clave_bin', 'Comentario_longitud']
+# Definimos las columnas categóricas y numéricas
+categorical_cols = ['tipo_pensamiento', 'simbolo_o_imagen', 'input_tipo', 'input_intensidad', 'contenido_estudiado', 'Dia_Semana']
+numerical_cols = ['energia_0_10', 'fatiga_mental_0_10', 'control_pensamiento_0_10', 'conciencia_presente_0_10',
+                  'Hora_Num', 'Comentario_longitud']
 
+# Preprocesamos los datos: codificamos las columnas categóricas y mantenemos las numéricas
 preprocessor = ColumnTransformer(
     transformers=[
         ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_cols)
     ],
-    remainder='passthrough'  # deja las columnas numéricas tal cual
+    remainder='passthrough'  # Mantén las columnas numéricas tal cual
 )
 
 # --- PIPELINE ---
+# Usamos un pipeline que incluye el preprocesador y el modelo de RandomForest
 pipeline = Pipeline(steps=[
     ('preprocessor', preprocessor),
     ('model', RandomForestRegressor(n_estimators=100, random_state=42))
