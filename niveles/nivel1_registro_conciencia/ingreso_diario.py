@@ -1,81 +1,56 @@
-import os
 import csv
-import subprocess
 from datetime import datetime
+import os
 
-# --- CONFIGURACIÓN ---
-RUTA_CSV = os.path.abspath('../neurocoach-ia/data/registro_cognitivo.csv')
-RUTA_ANALISIS = os.path.abspath('../neurocoach-ia/fase2_analisis/analisis_datos.py')
+# Ruta del archivo donde se guardarán los registros
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+ARCHIVO_CSV = os.path.join(BASE_DIR, "data/nivel1/registro_diario.csv")
+os.makedirs(os.path.dirname(ARCHIVO_CSV), exist_ok=True)
 
-# --- FUNCIONES DE ENTRADA ---
-def input_numerico(mensaje, minimo=1, maximo=10):
-    while True:
-        valor = input(f"{mensaje} ({minimo}-{maximo}): ").strip()
-        if valor.isdigit() and minimo <= int(valor) <= maximo:
-            return valor
-        else:
-            print("❌ Valor no válido. Intenta de nuevo.")
+# Campos que se van a registrar
+campos = [
+    "fecha",
+    "hora",
+    "nivel_energia",
+    "estado_emocional",
+    "tipo_tarea",
+    "resultado",
+    "forma_pensamiento",
+    "tipo_procesamiento",
+    "tension_cognitiva",
+    "flexibilidad_mental",
+    "estrategia_afrontamiento",
+    "dialogo_interno"
+]
 
-def capturar_datos():
-    print("\n🧠 Ingreso de datos para el Neurocoach:")
-    def input_fecha():
-        hoy = datetime.now().strftime("%Y-%m-%d")
-        entrada = input(f"Fecha del registro [Enter para usar {hoy}]: ").strip()
-        if entrada == "":
-            return hoy
-        try:
-            datetime.strptime(entrada, "%Y-%m-%d")
-            return entrada
-        except ValueError:
-            print("❌ Formato inválido. Usa AAAA-MM-DD.")
-            return input_fecha()
-    def input_hora():
-        ahora = datetime.now().strftime("%H:%M")
-        entrada = input(f"Hora del registro [Enter para usar {ahora}]: ").strip()
-        if entrada == "":
-            return ahora
-        try:
-            datetime.strptime(entrada, "%H:%M")
-            return entrada
-        except ValueError:
-            print("❌ Formato inválido. Usa HH:MM en 24h.")
-            return input_hora()
-        
-    fecha = input_fecha()
-    hora = input_hora()
-    energia = input_numerico("Nivel de energía")
-    estado_animo = input_numerico("Estado de ánimo")
-    tarea = input("¿Qué tarea realizaste?: ").strip()
-    tipo_tarea = input("Tipo de tarea (Ejercicio, Rutina, Trabajo...): ").strip()
-    resultado = input_numerico("Resultado percibido")
-    comentarios = input("Comentarios del día: ").strip()
-    punto_clave = input("Punto clave (si hubo alguno): ").strip()
+def obtener_datos_usuario():
+    print("🧠 Registro Diario de Conciencia")
+    datos = {
+        "fecha": datetime.now().strftime("%Y-%m-%d"),
+        "hora": datetime.now().strftime("%H:%M:%S"),
+        "nivel_energia": input("Nivel de energía (1-10): "),
+        "estado_emocional": input("Estado emocional (ej: tranquilo, ansioso): "),
+        "tipo_tarea": input("Tipo de tarea realizada: "),
+        "resultado": input("Resultado (ej: completada, a medias): "),
+        "forma_pensamiento": input("Forma del pensamiento (visual, narrativa...): "),
+        "tipo_procesamiento": input("Tipo de procesamiento (emocional, racional...): "),
+        "tension_cognitiva": input("Tensión cognitiva (0-10): "),
+        "flexibilidad_mental": input("Flexibilidad mental (0-10): "),
+        "estrategia_afrontamiento": input("Estrategia de afrontamiento: "),
+        "dialogo_interno": input("Diálogo interno (apoyo, juicio, dispersión...): "),
+    }
+    return datos
 
-    return [fecha, hora, energia, estado_animo, tarea, tipo_tarea, resultado, comentarios, punto_clave]
+def guardar_en_csv(datos):
+    archivo_nuevo = not os.path.exists(ARCHIVO_CSV)
 
-# --- GUARDAR EN CSV ---
-def guardar_registro(datos):
-    existe = os.path.isfile(RUTA_CSV)
-    with open(RUTA_CSV, 'a', newline='') as archivo:
-        escritor = csv.writer(archivo)
-        if not existe:
-            escritor.writerow(['Fecha', 'Hora', 'Energia', 'Estado_Animo', 'Tarea', 'Tipo_tarea', 'Resultado', 'Comentarios', 'Punto clave'])
-        escritor.writerow(datos)
+    with open(ARCHIVO_CSV, mode='a', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=campos)
+        if archivo_nuevo:
+            writer.writeheader()
+        writer.writerow(datos)
     print("✅ Registro guardado correctamente.")
 
-# --- LANZAR ANÁLISIS ---
-def ejecutar_analisis():
-    if not os.path.exists(RUTA_ANALISIS):
-        print(f"⚠️ Script de análisis no encontrado en: {RUTA_ANALISIS}")
-        return
-    print("📈 Ejecutando análisis de datos...\n")
-    subprocess.run(['python3', RUTA_ANALISIS])
-
-# --- MAIN FLOW ---
 if __name__ == "__main__":
-    datos = capturar_datos()
-    guardar_registro(datos)
-
-    respuesta = input("\n¿Deseas ejecutar el análisis de datos ahora? (s/n): ").strip().lower()
-    if respuesta == 's':
-        ejecutar_analisis()
+    datos = obtener_datos_usuario()
+    guardar_en_csv(datos)
