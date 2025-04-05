@@ -5,7 +5,7 @@ import os
 
 # ✅ Ruta dinámica del CSV
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
-RUTA_CSV = os.path.join(BASE_DIR, "data/nivel1/registro_diario.csv")
+RUTA_CSV = os.path.join(BASE_DIR, "data/nivel1/registro_conciencia.csv")
 
 def cargar_datos():
     if not os.path.exists(RUTA_CSV):
@@ -55,7 +55,7 @@ def boxplot_tension_tarea(df):
     plt.show()
 
 def mapa_correlaciones(df):
-    cols_num = ['nivel_energia', 'tension_cognitiva', 'flexibilidad_mental']
+    cols_num = ['nivel_energia', 'tension_cognitiva', 'flexibilidad_mental', 'conciencia_presente_0_10']
     corr = df[cols_num].corr()
     plt.figure(figsize=(6, 4))
     sns.heatmap(corr, annot=True, cmap='coolwarm', fmt=".2f")
@@ -68,16 +68,31 @@ def main():
     if df is None:
         return
 
+def graficar_conciencia(df):
+    df.sort_values("fecha", inplace=True)
+    plt.figure(figsize=(10, 4))
+    plt.plot(df['fecha'], df['conciencia_presente_0_10'], marker='s', linestyle='-', color='purple')
+    plt.title("Evolución de la Conciencia Presente")
+    plt.xlabel("Fecha")
+    plt.ylabel("Conciencia (0–10)")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+    
     # Asegurar conversión numérica por si acaso
     df['nivel_energia'] = pd.to_numeric(df['nivel_energia'], errors='coerce')
     df['tension_cognitiva'] = pd.to_numeric(df['tension_cognitiva'], errors='coerce')
     df['flexibilidad_mental'] = pd.to_numeric(df['flexibilidad_mental'], errors='coerce')
+    df['conciencia_presente_0_10'] = pd.to_numeric(df['conciencia_presente_0_10'], errors='coerce')
 
     estadisticas_basicas(df)
     graficar_energia(df)
     graficar_formas_pensamiento(df)
     boxplot_tension_tarea(df)
     mapa_correlaciones(df)
+    graficar_conciencia(df)
+
 
 if __name__ == "__main__":
     main()
+
