@@ -20,3 +20,6 @@ env/
 *.log
 logs/
 .env
+
+# Datos generados
+data/
